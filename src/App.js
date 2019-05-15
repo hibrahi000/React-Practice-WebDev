@@ -1,10 +1,10 @@
- import React, { Component } from 'react';
-import './App.css';
+import React, { Component } from 'react';
+import classes from './App.css';
 import Person from './Components/Person/Person'
 
 
 
-let counter =0;
+let counter = 0;
 
 class App extends Component {
   state ={
@@ -14,7 +14,7 @@ class App extends Component {
       {id: 'asf::', name: 'Stephanie', age: 26}
 
     ],
-    otherState : 'some other value'
+    otherState: 'some other value'
   }
 
 
@@ -28,7 +28,7 @@ class App extends Component {
 
     person.name = event.target.value;
 
-    const persons = [...this.state.persons];
+    const   persons      = [...this.state.persons];
     persons[personIndex] = person;
 
     this.setState( { persons: persons} )
@@ -51,12 +51,12 @@ class App extends Component {
 
     const style ={
       backgroundColor: "green",
-      color: "white",
-      font: "inherit",
-      border: "1px solid blue",
-      padding: '8px',
-      cursor:' pointer',
-      outline: 'none',
+      color          : "white",
+      font           : "inherit",
+      border         : "1px solid blue",
+      padding        : '8px',
+      cursor         : ' pointer',
+      outline        : 'none',
 
     };
 
@@ -69,10 +69,10 @@ class App extends Component {
             let { name, age, id} = person
 
             return <Person
-              click ={() => this.deletePersonHandler(index)}
-              name={name}
-              age={age}
-              key= {id}
+              click   = {() => this.deletePersonHandler(index)}
+              name    = {name}
+              age     = {age}
+              key     = {id}
               changed = {(event) =>this.nameChangedHandler(event, id)}
               />
 
@@ -85,22 +85,23 @@ class App extends Component {
         style.backgroundColor = 'red';
 
     }
+    console.log(classes);
 
-
-    const classes =[]
+    const assignedClasses = []
     if(this.state.persons.length <= 2){
-      classes.push('red'); // classes =['red']
+      assignedClasses.push( classes.red ); // classes =['red']
+    
     }
     if(this.state.persons.length <=1){
-      classes.push('bold'); // classes =['red', 'bold']
+      assignedClasses.push( classes.bold ); // classes =['red', 'bold']
     }
     return (
       // you can only have one root element in the jsx structure
 
-      <div className="App">
+      <div className = {classes.App}>
         <h1>Hello I Am React</h1>
-        <p className={classes.join(' ')}>This is another line</p>
-        <button style={style} onClick={this.togglePersonsHandler}>Toggle Persons</button>
+        <p      className = {assignedClasses.join(' ')}>This is another line</p>
+        <button style     = {style} onClick = {this.togglePersonsHandler}>Toggle Persons</button>
         {persons}
       </div>
 
