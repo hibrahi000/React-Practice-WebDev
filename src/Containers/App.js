@@ -1,14 +1,13 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import classes from './App.module.css';
 import Persons from '../Components/Persons/Persons';
 import Cockpit from '../Components/Cockpit/Cockpit';
-import ErrorBoundary from '../Components/ErrorBoundary/ErrorBoundary';
+import withClass from '../hoc/withClass';
 class App extends Component {
 	constructor(props) {
-	super(props);
-	console.log('[App.js] constructor');
+		super(props);
+		console.log('[App.js] constructor');
 	}
-
 
 	state = {
 		persons: [
@@ -16,16 +15,19 @@ class App extends Component {
 			{ id: 'asfLL', name: 'Manu', age: 29 },
 			{ id: 'asf::', name: 'Stephanie', age: 26 }
 		],
-		otherState: 'some other value'
+		otherState: 'some other value',
+		showPersons: false,
+		showCockpit: true,
+		changeCounter : 0
 	};
 
-	static getDerivedStateFromProps(props, state){
+	static getDerivedStateFromProps(props, state) {
 		console.log('[App.js] getDerivedStateFromProps', props);
 		return state;
 	}
 
 	componentDidMount() {
-		console.log('[App.js] componentDidMount')
+		console.log('[App.js] componentDidMount');
 	}
 
 	nameChangedHandler = (event, id) => {
@@ -38,15 +40,20 @@ class App extends Component {
 
 		person.name = event.target.value;
 
-		const persons = [ ...this.state.persons ];
+		const persons = [...this.state.persons];
 		persons[personIndex] = person;
 
-		this.setState({ persons: persons });
-	};
+		this.setState((prevState, props)=> {
+			return{ 
+			persons: persons, 
+			changeCounter: this.state.changeCounter +1 
+			}
+		});
+	}
 
 	deletePersonHandler = (personIndex) => {
 		// const persons = this.state.persons.slice;
-		const persons = [ ...this.state.persons ];
+		const persons = [...this.state.persons];
 		persons.splice(personIndex, 1);
 		this.setState({ persons: persons });
 	};
@@ -75,29 +82,31 @@ class App extends Component {
 				<div>
 					<Persons
 						persons={this.state.persons}
-						clicked = { this.deletePersonHandler}
-						changed = {this.nameChangedHandler}
-						/>
+						clicked={this.deletePersonHandler}
+						changed={this.nameChangedHandler}
+					/>
 				</div>
 			);
-			
 		}
-
 
 		return (
 			// you can only have one root element in the jsx structure
 
-			<div className={classes.App}>
-				<Cockpit
-				title={this.props.appTitle}
-				showPersons={this.state.showPersons}
-				persons={this.state.persons}
-				clicked={this.togglePersonsHandler} />
+			<Fragment >
+				<button onClick={() => this.setState({ showCockpit: false })}>Remove Cockpit</button>
+				{this.state.showCockpit ? 
+					<Cockpit
+						title={this.props.appTitle}
+						showPersons={this.state.showPersons}
+						personsLength={this.state.persons.length}
+						clicked={this.togglePersonsHandler}
+					/> : null
+				}
 				{persons}
-			</div>
+			</Fragment>
 		);
 		// return React.createElement('h1', {className:'App'}, React.createElement('h1',null,'Does this work')); This is what it would look like if we didnt use Jsx
 	}
 }
 
-export default App;
+export default withClass(App, classes.App);
